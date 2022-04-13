@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script type="firebase.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div id = "map" style = "width: 100%; height: 780px"></div>
+
+
+    <script type="module">
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"
+      import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
+      import { collection, getDocs, doc, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
+
+  const firebaseConfig = {
+      apiKey: "AIzaSyBaJS4R0Dx7VA8v93VeOjIuuwRzM7uKceo",
+      authDomain: "favouriteplaces-de573.firebaseapp.com",
+      projectId: "favouriteplaces-de573",
+      storageBucket: "favouriteplaces-de573.appspot.com",
+      messagingSenderId: "744396835300",
+      appId: "1:744396835300:web:295e15f2af025cf704dff1",
+      measurementId: "G-ENRZEZS1KZ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  const db = getFirestore(app);
+  const querySnapshot = await getDocs(collection(db,"places"));
+
+
+  getLocation();
+ 
+
+  function getLocation() {
+  if (navigator.geolocation) {
+     navigator.geolocation.getCurrentPosition(showPosition);
+   } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }}
+
+  function showPosition(position) {
+    var pos_latitude = position.coords.latitude
+    var pos_longitude = position.coords.longitude
+
+    var mapOptions = {
+      center: [pos_latitude, pos_longitude],
+      attributionControl : false,
+      zoom: 18}
+
+    var map = new L.map('map', mapOptions);
+    var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    map.addLayer(layer);
+
+    var attrOptions = {
+      prefix: 'UlubioneMiejsca'
+      };
+       
+       var attr = L.control.attribution(attrOptions);
+       attr.addTo(map);  
+
+      map.on("click", function(e){
+        if (confirm("Czy chcesz dodać w tym miejscu nowy punkt?") == true ){
+          var newPlaceName = prompt("Podaj nazwę nowego punktu:");
+          if (newPlaceName != null && newPlaceName !=""){
+            var newPlaceDescription = prompt("Podaj opis nowego miejsca:")
+            if (newPlaceDescription != null && newPlaceDescription !=""){
+              var newPlaceLatitude = e.latlng.lat;
+              var newPlaceLongitude = e.latlng.lng;
+              var markerOptions = {
+                title: newPlaceName,
+                clickable: true,
+                draggable: false
+             }
+            var marker = L.marker([newPlaceLatitude, newPlaceLongitude], markerOptions);
+            marker.bindPopup(newPlaceDescription);
+            marker.addTo(map);
+
+            //wysyłanie klikniętego punktu do bazy danych, favourite dałem bo myślałem że może być tak że 'ulubione' np będą miały czerwony kolor na mapie zamiast niebieskiego
+            addDoc(collection(db, "places"), {
+              name: newPlaceName,
+              latitude: newPlaceLatitude,
+              longitude: newPlaceLongitude,
+              favourite: false,
+              description: newPlaceDescription
+              });
+        }
+        }
+        }
+        })
+        
+
+    addExistingPointsFromFirebase();
+
+      function addExistingPointsFromFirebase(){
+        querySnapshot.forEach((doc) => {
+          var markerOptions = {
+            title: doc.data()['name'],
+            clickable: true,
+            draggable: false
+         }
+          var marker = L.marker([doc.data()['latitude'], doc.data()['longitude']], markerOptions);
+          marker.bindPopup(doc.data()['description'])
+          marker.addTo(map);
+        });
+      }
+
+    }
+
+</script>
+
+</body>
+</html>
