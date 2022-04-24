@@ -120,7 +120,7 @@
                     user: 'user1',
                     localization: 'loc1',
 
-
+                    localization_id: '',
                     menuElements: {
                         name: "UlubioneLokalizacje",
                         login: "jankowalski",
@@ -174,7 +174,12 @@
 
 
 
-
+                selectElementId: function(event) {
+            var targetId = event.currentTarget.id;
+            this.localization_id = targetId
+            console.log(targetId)
+            this.showDetails()
+        },
 
                 async showDetails(){
                     const db = getFirestore(app);
@@ -217,7 +222,7 @@
         var newDescription = document.createElement("h6");
         newDiv.setAttribute('id', doc.id);
         newDiv.className="listSingleItem";
-        newDiv.addEventListener('click', this.showDetails);
+        newDiv.addEventListener('click', this.selectElementId);
         newTitle.innerHTML = doc.data()['name'];
         newDescription.innerHTML = doc.data()['description'];
         newTitle.className="listSingleItemName";
