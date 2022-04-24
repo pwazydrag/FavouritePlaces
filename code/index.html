@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Menu</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body> 
+
+    <div id="app">
+
+    <!-- Widok menu -->
+    <template v-if="currentView.show_menu">
+        <div class="col-12" id="menuTop">
+            <div class="col-6">
+                <h3 id="menuAppName">{{ menuElements.name }}</h3>
+                <h4 class="menuTopElement">{{ menuElements.login }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+            </div>
+        </div>
+        <div class="col-12" id="menuBot">
+            <h4 id="menuMenu">{{ menuElements.menu }}</h4>
+            <h4  @click="renderList()" class="menuElement">{{ menuElements.list }}</h4>
+            <h4 @click="renderMap()" class="menuElement">{{ menuElements.map }}</h4>
+            <h4 @click="renderAddForm()" class="menuElement">{{ menuElements.add}}</h4>
+            <h4 class="menuElement">{{ menuElements.logout }}</h4>
+        </div>
+    </template>
+
+    <!-- Widok listy lokalizacji -->
+    <template v-if="currentView.show_list">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">lista lokalizacji</h4>
+        </div>
+    </template>
+
+    <!-- Widok mapy z menu głównego -->
+    <template v-if="currentView.show_map">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">Mapa</h4>
+        </div>
+    </template>
+
+    <!-- Widok dodawania nowej lokalizacji -->
+    <template v-if="currentView.show_add_form">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">Dodaj lokalizacje</h4>
+        </div>
+    </template>
+
+
+
+
+    </div>
+    
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
+        import { collection, getDocs, doc, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js'
+      
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaJS4R0Dx7VA8v93VeOjIuuwRzM7uKceo",
+            authDomain: "favouriteplaces-de573.firebaseapp.com",
+            projectId: "favouriteplaces-de573",
+            storageBucket: "favouriteplaces-de573.appspot.com",
+            messagingSenderId: "744396835300",
+            appId: "1:744396835300:web:295e15f2af025cf704dff1",
+            measurementId: "G-ENRZEZS1KZ"
+        };
+      
+    const app = initializeApp(firebaseConfig);
+
+
+
+
+
+
+
+    Vue.createApp({
+            data() {
+                return {
+                    menuElements: {
+                        name: "UlubioneLokalizacje",
+                        login: "jankowalski",
+                        menu: "Menu",
+                        list: "Lista lokalizacji",
+                        map: "Mapa",
+                        add: "Dodaj lokalizację",
+                        logout: "Wyloguj się",
+                    },
+                    currentView: {
+                        show_menu: true,
+                        show_list: false,
+                        show_detail: false,
+                        show_map: false,
+                        show_add_form: false,
+                    }
+                }
+            },
+            methods: {
+                hideAll() {
+                    this.currentView.show_menu = false
+                    this.currentView.show_list = false
+                    this.currentView.show_detail = false
+                    this.currentView.show_map = false
+                    this.currentView.show_add_form = false
+                },
+                renderList() {
+                    this.hideAll()
+                    this.currentView.show_list = true
+                },
+                renderMap() {
+                    this.hideAll()
+                    this.currentView.show_map = true
+                },
+                renderAddForm() {
+                    this.hideAll()
+                    this.currentView.show_add_form = true
+                },
+
+            }          
+    }) .mount('#app')
+
+</script>
+
+</body>
+</html>
+
+
