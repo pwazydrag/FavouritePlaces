@@ -45,7 +45,7 @@
 
     <!-- Widok listy lokalizacji -->
     <template v-if="currentView.show_list">
-        <div class="container-fluid" style="background-color: white;">
+        <div class="container-fluid" style="background-color: #1E2D3E;">
             <div id="list"></div>
         </div>
     </template>
@@ -453,7 +453,6 @@
           function addCordsToForm(position){
             document.getElementById("inputCurrentLatitude").value=position.coords.latitude
             document.getElementById("inputCurrentLongitude").value=position.coords.longitude
-            console.log("test")
           }
  
     }
