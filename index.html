@@ -38,6 +38,7 @@
             <h4 @click="renderList()" class="menuElement">{{ menuElements.list }}</h4>
             <h4 @click="renderMap()" class="menuElement">{{ menuElements.map }}</h4>
             <h4 @click="renderAddForm()" class="menuElement">{{ menuElements.add}}</h4>
+            <h4 @click="renderFullGallery()" class="menuElement">Galeria</h4>
             <h4 class="menuElement">{{ menuElements.logout }}</h4>
         </div>
     </template>
@@ -67,6 +68,8 @@
                 </div>
                 <div class="mt-3">
                     <button type="button" value="Submit" id="btn" class="btn btn-primary" @click="submitChanges()">Zapisz zmiany</button>
+                    <button type="button" class="btn btn-primary" @click="renderSmallGallery()" class="menuElement">Galeria</button>
+                    <button type="button" class="btn btn-primary" @click="renderPhoto()" class="menuElement">Zrób zdjęcie</button>
                 </div>
             </form>
         </div>
@@ -84,6 +87,26 @@
         </div>
     </template>
 
+    <!-- Widok galerii wspólnej -->
+    <template v-if="currentView.show_full_galery">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">Pełna Galeria</h4>
+        </div>
+    </template>
+
+    <!-- Widok galerii lokalizacji -->
+    <template v-if="currentView.show_small_galery">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">Galeria Lokalizacji</h4>
+        </div>
+    </template>
+
+    <!-- Widok robienia zdjęcia -->
+    <template v-if="currentView.show_photo">
+        <div class="col-12" id="menuTop">
+            <h4 style="color: white;">Robienie zdjęcia</h4>
+        </div>
+    </template>
 
 
 
@@ -137,6 +160,9 @@
                         show_detail: false,
                         show_map: false,
                         show_add_form: false,
+                        show_full_galery: false,
+                        show_small_galery: false,
+                        show_photo: false,
                     }
                 }
             },
@@ -148,6 +174,9 @@
                     this.currentView.show_detail = false
                     this.currentView.show_map = false
                     this.currentView.show_add_form = false
+                    this.currentView.show_full_galery = false
+                    this.currentView.show_small_galery = false
+                    this.currentView.show_photo = false
                 },
                 renderList() {
                     this.hideAll()
@@ -169,6 +198,21 @@
                 renderMenu() {
                     this.hideAll()
                     this.currentView.show_menu = true
+                },
+                renderFullGallery() {
+                    this.hideAll()
+                    this.currentView.show_navbar = true
+                    this.currentView.show_full_galery = true
+                },
+                renderSmallGallery() {
+                    this.hideAll()
+                    this.currentView.show_navbar = true
+                    this.currentView.show_small_galery = true
+                },
+                renderPhoto() {
+                    this.hideAll()
+                    this.currentView.show_navbar = true
+                    this.currentView.show_photo = true          
                 },
 
 
