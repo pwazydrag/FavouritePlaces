@@ -72,3 +72,23 @@ body, html{
     color: white;
     margin-left: 1rem;
 }
+
+.formElement{
+    color: white;
+}
+
+#inputFavouriteYes{
+    width: 1.3rem; 
+    height: 1.3rem;
+}
+
+#inputFavouriteNo{
+    margin-left: 2rem;
+    width: 1.3rem; 
+    height: 1.3rem;
+}
+
+.radioYesNo{
+    margin-left: 0.3rem;
+    font-size: 1.2rem;
+}
