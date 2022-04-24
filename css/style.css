@@ -1,0 +1,58 @@
+body, html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #1E2D3E;
+}
+
+#menuAppName{
+    color: aliceblue;
+    padding-top: 2rem;
+    margin-left: 4rem;
+    margin-bottom: 2rem;
+}
+
+#menuMenu{
+    color: azure;
+    margin-left: 4rem;
+    margin-bottom: 4rem;
+    padding-top: 4rem;
+}
+
+.menuTopElement{
+    color: azure;
+    margin-bottom: 0;
+    margin-left: 4rem;
+    padding-bottom: 4rem;
+}
+
+.menuElement{
+    color: beige;
+    margin-bottom: 4rem;
+    margin-left: 4rem;
+}
+
+.menuElement:last-child{
+    color: beige;
+    margin-bottom: 4rem;
+    margin-left: 4rem;
+    padding-bottom: 4rem;
+}
+
+#menuTop{
+    background-color: #263445;
+}
+
+#menuBot{
+    background-color: #1E2D3E;
+    margin-bottom: 0;
+}
+
+.listSingleItem{
+    margin-top: 2rem;
+}
+
+.listSingleItem:first-child{
+    margin-top: 0.6rem;
+}
+
