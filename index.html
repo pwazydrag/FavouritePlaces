@@ -48,11 +48,14 @@
         <div class="container-fluid" style="background-color: white;">
             <div id="list"></div>
         </div>
-        
-        <div class="container-fluid" id="details" style="display: none;">
+    </template>
+
+    <!-- Widok szczegółów lokalizacji -->
+    <template v-if="currentView.show_detail">
+        <div class="container-fluid" id="details">
             <div>
-                <button type="button" value="" id="goBack" class="btn btn-primary mt-3" @click="goBack()">Wróć</button>
-                <button type="button" value="" id="goBack" class="btn btn-danger mt-3" @click="deleteElement()" style="float: right;">Usuń</button>
+                <button type="button" value="" id="renderList" class="btn btn-primary mt-3" @click="renderList()">Wróć</button>
+                <button type="button" value="" id="renderList" class="btn btn-danger mt-3" @click="deleteElement()" style="float: right;">Usuń</button>
             </div>
             <form>
                 <label for="inputName" class="mt-3">Nazwa</label>
@@ -194,6 +197,12 @@
                     this.currentView.show_list = true
                     this.listjs()
                 },
+                renderDetail(targetId) {
+                    this.hideAll()
+                    this.currentView.show_navbar = true
+                    this.currentView.show_detail = true
+                    this.showDetails(targetId)
+                },
                 renderMap() {
                     this.hideAll()
                     this.currentView.show_navbar = true
@@ -227,39 +236,39 @@
                 },
 
 
-        selectElementId: function(event) {
-            var targetId = event.currentTarget.id;
-            this.localization_id = targetId
-            this.showDetails(targetId)
-        },
+                selectElementId: function(event) {
+                    var targetId = event.currentTarget.id;
+                    this.localization_id = targetId
+                    this.renderDetail(targetId)
+                },
 
-    async showDetails(targetId){
-        const db = getFirestore(app);
-        const querySnapshot = await getDocs(collection(db,"places"));
+                async showDetails(targetId){
 
-        var elementId = this.localization_id;
-        var allItems = document.getElementsByClassName("listSingleItem")
-        var item = "";
-        for (var i=0; i<allItems.length; i++){
-            allItems[i].style.display='none';
-        }
-        var detailsPage = document.getElementById('details');
-        detailsPage.style.display='block';
-        querySnapshot.forEach((doc) => {
-            if (doc.id==elementId){
-                document.getElementById("inputName").value=doc.data()['name'];
-                document.getElementById("inputDescription").value=doc.data()['description'];
-                document.getElementById("inputLatitude").value=doc.data()['latitude'];
-                document.getElementById("inputLongitude").value=doc.data()['longitude'];
-                if (doc.data()['favourite']==true){
-                    document.getElementById("inputFavouriteYes").checked=true;
-                }
-                else{
-                    document.getElementById("inputFavouriteNo").checked=true;
-                }
-            }
-        });
-    },
+                    var el = document.getElementById("list")
+                    while (el.firstChild) {
+                        el.removeChild(el.firstChild);
+                    }
+
+                    const db = getFirestore(app);
+                    const querySnapshot = await getDocs(collection(db,"places"));
+
+                    var elementId = this.localization_id;
+
+                    querySnapshot.forEach((doc) => {
+                        if (doc.id==elementId){
+                            document.getElementById("inputName").value=doc.data()['name'];
+                            document.getElementById("inputDescription").value=doc.data()['description'];
+                            document.getElementById("inputLatitude").value=doc.data()['latitude'];
+                            document.getElementById("inputLongitude").value=doc.data()['longitude'];
+                            if (doc.data()['favourite']==true){
+                                document.getElementById("inputFavouriteYes").checked=true;
+                            }
+                            else{
+                                document.getElementById("inputFavouriteNo").checked=true;
+                            }
+                        }
+                    });
+                },
 
     async submitForm(){
         const db = getFirestore(app);
@@ -292,28 +301,19 @@
         
         const plRef = doc(db, "places", this.localization_id);
         await updateDoc(plRef, {
-        name: changedName,
-        description: changedDescription,
-        latitude: changedLatitude,
-        longitude: changedLongitude,
-        favourite: changedFavourite
-        
-});
-    this.goBack();
-    },
-
-    async goBack(){
-        document.getElementById("details").style.display="none";
-        var allItems = document.getElementsByClassName("listSingleItem");
-        for (var i=0; i<allItems.length; i++){
-            allItems[i].style.display='block';
-        }
+            name: changedName,
+            description: changedDescription,
+            latitude: changedLatitude,
+            longitude: changedLongitude,
+            favourite: changedFavourite
+        });
+    this.renderList();
     },
 
     async deleteElement(){
         const db = getFirestore(app);
         await deleteDoc(doc(db, "places", this.localization_id));
-        this.goBack();
+        this.renderList();
     },
 
     
@@ -361,8 +361,6 @@
         function showPosition(position) {
             var pos_latitude = position.coords.latitude
             var pos_longitude = position.coords.longitude
-            currentLatitude = pos_latitude
-            currentLongitude = pos_longitude
             var mapOptions = {
             center: [pos_latitude, pos_longitude],
             attributionControl : false,
