@@ -155,8 +155,11 @@
 
         <!-- Widok robienia zdjęcia -->
         <template v-if="currentView.show_photo">
-            <div class="col-12" id="menuTop">
-                <h4 style="color: white;">Robienie zdjęcia</h4>
+            <div class="col-12" id="make_photo_div">
+                <video id="photo_video" width="320" height="240" autoplay></video>
+                <button id="click-photo" @click="clickPhotoBtn()">Click Photo</button>
+                <canvas id="photo_canvas" width="320" height="240"></canvas>
+                <button id="send-photo" @click="sendPhoto()">Send Photo</button>
             </div>
         </template>
     </div>
@@ -167,7 +170,8 @@
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, getAdditionalUserInfo, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider  } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, addDoc, query, where, updateDoc, deleteDoc} from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
         import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js'
-      
+        import { getStorage, uploadBytes, getDownloadURL, listAll, uploadBytesResumable, ref as sref } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyBaJS4R0Dx7VA8v93VeOjIuuwRzM7uKceo",
             authDomain: "favouriteplaces-de573.firebaseapp.com",
@@ -375,7 +379,8 @@
                     renderPhoto() {
                         this.hideAll()
                         this.currentView.show_navbar = true
-                        this.currentView.show_photo = true          
+                        this.currentView.show_photo = true   
+                        this.makePhotoJS()       
                     },
 
 
@@ -592,6 +597,63 @@
                             document.getElementById("inputCurrentLatitude").value=position.coords.latitude
                             document.getElementById("inputCurrentLongitude").value=position.coords.longitude
                         }
+                    },
+
+                    async makePhotoJS() {
+                        try{
+                        let video = document.getElementById('photo_video')
+                        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                        video.srcObject = stream}
+                        catch(error) {console.log(error)}
+                    },
+
+                    clickPhotoBtn() {
+                        let video = document.getElementById('photo_video')
+                        let canvas = document.getElementById('photo_canvas')
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                    },
+
+                    async sendPhoto() {
+                        var c = document.getElementById("photo_canvas");
+
+                        const fff = await new Promise(resolve => c.toBlob(resolve));
+
+                        const fileName = this.makePhotoName()
+                        const refer = this.login_credentials.userInfo.uid +'/'+ this.localization_id +'/'+ fileName
+
+                        const storage = getStorage();
+                        const storageRef = sref(storage, refer);
+
+                        const metadata = {
+                            contentType: 'image/jpeg',
+                        };
+
+                        uploadBytes(storageRef, fff,metadata).then((snapshot) => {
+                            console.log('Uploaded a blob or file!');
+                        });
+                    },
+
+                    makePhotoName() {
+                        var today = new Date();       
+                        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();        
+                        var ranstr = btoa(Math.random().toString()).substr(10, 10);
+                        var fileName = date + '-' + ranstr
+                        return fileName
+                    },
+
+                    show_img_from_folder(listRef) {
+                        listAll(listRef)
+                            .then((res) => {
+                                res.items.forEach((itemRef) => {
+                                    getDownloadURL(itemRef)
+                                        .then(function(url) {
+                                            const img = document.createElement('img');
+                                            var el = document.getElementById('gal');
+                                            img.setAttribute('src', url);
+                                            el.appendChild(img);
+                                        });
+                                });
+                            })
                     }
                         
                 }
