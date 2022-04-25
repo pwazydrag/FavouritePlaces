@@ -62,7 +62,7 @@
             <div class="col-12" id="menuTop">
                 <div class="col-6">
                     <h3 id="menuAppName">{{ menuElements.name }}</h3>
-                    <h4 class="menuTopElement">{{ login_credentials.user }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+                    <h4 class="menuTopElement">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
                 </div>
             </div>
             <div class="col-12" id="menuBot">
@@ -219,7 +219,8 @@
                             password: "",
                             userCredential : "",
                             userInfo: "",
-                            token: ""
+                            token: "",
+                            display_name: ""
                         }
                     }
                 },
