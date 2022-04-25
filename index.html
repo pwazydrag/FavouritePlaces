@@ -251,12 +251,12 @@
                         .then((result) => {
                             // The signed-in user info.
                             const credential = FacebookAuthProvider.credentialFromResult(result);
-                            this.login_credentials.user = credential.user;
+                            this.login_credentials.user = result.user;
                             
                             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
                             const accessToken = credential.accessToken;
-                            this.login_credentials.userCredential = credential;
-                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.userCredential = result;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(result)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         })
@@ -283,9 +283,9 @@
                             const secret = credential.secret;
 
                             // The signed-in user info.
-                            this.login_credentials.user = credential.user;
-                            this.login_credentials.userCredential = credential;
-                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.user = result.user;
+                            this.login_credentials.userCredential = result;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(result)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         }).catch((error) => {
@@ -306,9 +306,8 @@
                             const credential = GoogleAuthProvider.credentialFromResult(result);
                             const token = credential.accessToken;
                             // The signed-in user info.
-                            const user = result.user;
-                            this.login_credentials.user = credential.user;
-                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.user = result.user;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(result)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         }).catch((error) => {
