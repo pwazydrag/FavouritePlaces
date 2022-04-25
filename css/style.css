@@ -5,11 +5,19 @@ body, html{
     background: #1E2D3E;
 }
 
+hr.solid{
+	border-top: 1px solid #8c8b8b;
+}
+
+label {
+    color: aliceblue;
+}
+
 #menuAppName{
     color: aliceblue;
     padding-top: 2rem;
     margin-left: 4rem;
-    margin-bottom: 2rem;
+    padding-bottom: 2rem;
 }
 
 #menuMenu{
