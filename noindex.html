@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <script type="firebase.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Menu</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body> 
+
+    <div id="app">
+        <template v-if="currentView.show_login">
+            <div class="container-fluid p-0 overflow-hidden">
+                <div class="row" id="menuTop">
+                    <h2 id="menuAppName">Zaloguj się</h3>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <form>
+                    <div class="d-grid gap-1">
+                        <div class="form-group">
+                            <label for="login_email">Email address</label>
+                            <input type="email" class="form-control" id="login_email" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="login_password">Password</label>
+                            <input type="password" class="form-control" id="login_password" placeholder="Password">
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="login_remember_me">
+                            <label class="form-check-label" for="login_remember_me">Remember me</label>
+                        </div>
+                        <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100">Submit</button>
+                    </div>
+                </form>
+                <hr class="solid">
+                <div class="d-grid gap-3">
+                <button @click="loginWithFacebook()" type="button" class="btn btn-primary w-100 mt-10">Login with Facebook</button>
+                <button @click="loginWithTwitter()" type="button" class="btn btn-primary w-100 mt-10">Login with Twitter</button>
+                <button @click="loginWithGoogle()" type="button" class="btn btn-primary w-100 mt-10">Login with Google</button>
+                    </div>
+            </div>
+        </template>
+
+        <!-- Template Navbar -->
+        <template v-if="currentView.show_navbar">
+            <nav class="navbar navbar-dark bg-dark navbar-expand-xxl">
+                <div class="container-fluid">
+                <button @click="renderMenu()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu"><span class="navbar-toggler-icon"></span></button>
+                </div>
+            </nav>
+        </template>
+
+        <!-- Widok menu -->
+        <template v-if="currentView.show_menu">
+            <div class="col-12" id="menuTop">
+                <div class="col-6">
+                    <h3 id="menuAppName">{{ menuElements.name }}</h3>
+                    <h4 class="menuTopElement">{{ login_credentials.user }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+                </div>
+            </div>
+            <div class="col-12" id="menuBot">
+                <h4 id="menuMenu">{{ menuElements.menu }}</h4>
+                <h4 @click="renderList()" class="menuElement">{{ menuElements.list }}</h4>
+                <h4 @click="renderMap()" class="menuElement">{{ menuElements.map }}</h4>
+                <h4 @click="renderAddForm()" class="menuElement">{{ menuElements.add }}</h4>
+                <h4 @click="renderFullGallery()" class="menuElement">Galeria</h4>
+                <h4 @click="renderLogin()" class="menuElement">{{ menuElements.logout }}</h4>
+            </div>
+        </template>
+
+        <!-- Widok listy lokalizacji -->
+        <template v-if="currentView.show_list">
+            <div class="container-fluid" style="background-color: #1E2D3E;">
+                <div id="list"></div>
+            </div>
+        </template>
+
+        <!-- Widok szczegółów lokalizacji -->
+        <template v-if="currentView.show_detail">
+            <div class="container-fluid" id="details">
+                <div>
+                    <button type="button" value="" id="renderList" class="btn btn-primary mt-3" @click="renderList()">Wróć</button>
+                    <button type="button" value="" id="renderList" class="btn btn-danger mt-3" @click="deleteElement()" style="float: right;">Usuń</button>
+                </div>
+                <form>
+                    <label for="inputName" class="mt-3 formElement">Nazwa</label>
+                    <input type="text" class="form-control" id="inputName" value="" required>
+                    <label for="inputDescription" class="mt-3 formElement">Opis</label>
+                    <textarea id="inputDescription" cols="30" rows="6" class="w-100" required></textarea>
+                    <label for="inputLatitude" class="mt-3 formElement">Szerokość geograficzna</label>
+                    <input type="text" class="form-control" id="inputLatitude" value="" required>
+                    <label for="inputLongitude" class="mt-3 formElement">Długość geograficzna</label>
+                    <input type="text" class="form-control" id="inputLongitude" value="" required>
+                    <button type="button" class="btn btn-primary mt-3" @click="renderSmallGallery()" class="menuElement">Galeria</button>
+                    <button type="button" class="btn btn-primary mt-3" @click="renderPhoto()" class="menuElement" style="float: right;">Zrób zdjęcie</button>
+                    <p class="mt-3 formElement">Ulubione</p>
+                    <div>
+                        <input type="radio" id="inputFavouriteYes" value="yes" name="favouriteRadio">
+                        <label for="inputFavouriteYes" class="formElement radioYesNo">Tak</label>
+                        <input type="radio" id="inputFavouriteNo" value="no" name="favouriteRadio">
+                        <label for="inputFavouriteNo" class="formElement radioYesNo">Nie</label>
+                    </div>
+                    <div class="row">
+                        <button type="button" value="Submit" id="btn" class="btn btn-primary mt-3" @click="submitChanges()" style="text-align: center;">Zapisz zmiany</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </template>
+
+        <!-- Widok mapy z menu -->
+        <template v-if="currentView.show_map">
+            <div id = "map" style = "width: 100%; height: 90vh"></div>
+        </template>
+
+        <!-- Widok dodawania nowej lokalizacji -->
+        <template v-if="currentView.show_add_form">
+            <div class="container-fluid">
+                <label for="inputCurrentName" class="mt-3 mb-1 formElement">Nazwa</label>
+                <input type="text" class="form-control" id="inputCurrentName" value="" required>
+                <label for="inputCurrentDescription" class="mt-3 mb-1 formElement">Opis</label>
+                <textarea id="inputCurrentDescription" cols="50" rows="12" class="w-100" required></textarea>
+                <label for="inputCurrentLatitude" class="mt-3 mb-1 formElement">Szerokość geograficzna</label>
+                <input type="text" class="form-control" id="inputCurrentLatitude" value="" required>
+                <label for="inputCurrentLongitude" class="mt-3 mb-1 formElement">Długość geograficzna</label>
+                <input type="text" class="form-control" id="inputCurrentLongitude" value="" required>
+            </form>
+                <button type="button" value="Submit" class="btn btn-primary mt-3" @click="submitForm()">Wyślij</button>
+            </div>
+            <form> 
+
+    
+        </template>
+
+        <!-- Widok galerii wspólnej -->
+        <template v-if="currentView.show_full_galery">
+            <div class="col-12" id="menuTop">
+                <h4 style="color: white;">Pełna Galeria</h4>
+            </div>
+        </template>
+
+        <!-- Widok galerii lokalizacji -->
+        <template v-if="currentView.show_small_galery">
+            <div class="col-12" id="menuTop">
+                <h4 style="color: white;">Galeria Lokalizacji</h4>
+            </div>
+        </template>
+
+        <!-- Widok robienia zdjęcia -->
+        <template v-if="currentView.show_photo">
+            <div class="col-12" id="make_photo_div">
+                <video id="photo_video" width="320" height="240" autoplay></video>
+                <button id="click-photo" @click="clickPhotoBtn()">Click Photo</button>
+                <canvas id="photo_canvas" width="320" height="240"></canvas>
+                <button id="send-photo" @click="sendPhoto()">Send Photo</button>
+            </div>
+        </template>
+    </div>
+    
+    <script type="module">
+        const { computed, createApp, reactive, toRaw, watch } = Vue;
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, getAdditionalUserInfo, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider  } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, addDoc, query, where, updateDoc, deleteDoc} from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js'
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js'
+        import { getStorage, uploadBytes, getDownloadURL, updateMetadata, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-storage.js";
+      
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaJS4R0Dx7VA8v93VeOjIuuwRzM7uKceo",
+            authDomain: "favouriteplaces-de573.firebaseapp.com",
+            projectId: "favouriteplaces-de573",
+            storageBucket: "favouriteplaces-de573.appspot.com",
+            messagingSenderId: "744396835300",
+            appId: "1:744396835300:web:295e15f2af025cf704dff1",
+            measurementId: "G-ENRZEZS1KZ"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const providers = {
+            facebook: new FacebookAuthProvider(),
+            twitter: new TwitterAuthProvider(),
+            google: new GoogleAuthProvider()
+        }
+
+        Vue.createApp({
+                
+                data() {
+                    return {
+                        localization_id: '',
+                        stuser: 'testuser',
+
+                        menuElements: {
+                            name: "UlubioneLokalizacje",
+                            menu: "Menu",
+                            list: "Lista lokalizacji",
+                            map: "Mapa",
+                            add: "Dodaj lokalizację",
+                            logout: "Wyloguj się",
+                        },
+                        currentView: {
+                            // show_login: true,
+                            show_login: false,
+                            show_navbar: false,
+                            // show_menu: false,
+                            show_menu: true,
+                            show_list: false,
+                            show_detail: false,
+                            show_map: false,
+                            show_add_form: false,
+                            show_full_galery: false,
+                            show_small_galery: false,
+                            show_photo: false,
+                        },
+                            login_credentials: {
+                            email: "",
+                            password: "",
+                            userCredential : "",
+                            userInfo: "",
+                            token: ""
+                        }
+                    }
+                },
+                methods: {
+                    loginWithEmail() {
+                        signInWithEmailAndPassword(auth, document.getElementById("login_email").value, document.getElementById("login_password").value)
+                        .then((userCredential) => {
+                            // Signed in 
+                            const user = userCredential.user;
+                            this.login_credentials.userCredential = userCredential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error(errorCode, errorMessage)
+                        });
+                    },
+                    loginWithFacebook() {
+                        signInWithPopup(auth, providers.facebook)
+                        .then((result) => {
+                            // The signed-in user info.
+                            const user = result.user;
+                            
+                            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                            const credential = FacebookAuthProvider.credentialFromResult(result);
+                            const accessToken = credential.accessToken;
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                        })
+                        .catch((error) => {
+                            // Handle Errors here.
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error(errorCode, errorMessage);
+                            // The email of the user's account used.
+                            const email = error.email;
+                            console.error(email);
+                            // The AuthCredential type that was used.
+                            const credential = FacebookAuthProvider.credentialFromError(error);
+                            console.error(credential);
+                        });
+                    },
+                    loginWithTwitter() {
+                        signInWithPopup(auth, providers.twitter)
+                        .then((result) => {
+                            // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+                            // You can use these server side with your app's credentials to access the Twitter API.
+                            const credential = TwitterAuthProvider.credentialFromResult(result);
+                            const token = credential.accessToken;
+                            const secret = credential.secret;
+
+                            // The signed-in user info.
+                            const user = result.user;
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.display_name = this.login_credentials.userInfo.username
+                        }).catch((error) => {
+                            // Handle Errors here.
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error(errorCode, errorMessage);
+                            const email = error.email;
+                            console.error(email);
+                            const credential = TwitterAuthProvider.credentialFromError(error);
+                            console.error(credential);
+                        });
+                    },
+                    loginWithGoogle() {
+                        signInWithPopup(auth, providers.google)
+                        .then((result) => {
+                            // This gives you a Google Access Token. You can use it to access the Google API.
+                            const credential = GoogleAuthProvider.credentialFromResult(result);
+                            const token = credential.accessToken;
+                            // The signed-in user info.
+                            const user = result.user;
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                        }).catch((error) => {
+                            // Handle Errors here.
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error(errorCode, errorMessage);
+                            const email = error.email;
+                            console.error(email);
+                            const credential = GoogleAuthProvider.credentialFromError(error);
+                            console.error(credential);
+                        });
+                    },
+                    hideAll() {
+                        this.currentView.show_navbar = false
+                        this.currentView.show_menu = false
+                        this.currentView.show_list = false
+                        this.currentView.show_detail = false
+                        this.currentView.show_map = false
+                        this.currentView.show_add_form = false
+                        this.currentView.show_full_galery = false
+                        this.currentView.show_small_galery = false
+                        this.currentView.show_photo = false
+                    },
+                    renderLogin() {
+                        this.hideAll()
+                        // this.currentView.show_login = true
+                        this.currentView.show_login = false
+                    },
+                    renderList() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_list = true
+                        this.listjs()
+                    },
+                    renderDetail(targetId) {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_detail = true
+                        this.showDetails(targetId)
+                    },
+                    renderMap() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_map = true
+                        this.mapjs()
+                    },
+                    renderAddForm() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_add_form = true
+                        this.addjs()
+                    },
+                    renderMenu() {
+                        this.hideAll()
+                        this.currentView.show_menu = true
+                    },
+                    renderFullGallery() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_full_galery = true
+                    },
+                    renderSmallGallery() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_small_galery = true
+                    },
+                    renderPhoto() {
+                        this.hideAll()
+                        this.currentView.show_navbar = true
+                        this.currentView.show_photo = true
+                        this.makePhotoJS()          
+                    },
+
+
+                    selectElementId: function(event) {
+                        var targetId = event.currentTarget.id;
+                        this.localization_id = targetId
+                        this.renderDetail(targetId)
+                    },
+
+                    async showDetails(targetId){
+
+                        var el = document.getElementById("list")
+                        while (el.firstChild) {
+                            el.removeChild(el.firstChild);
+                        }
+
+                        const db = getFirestore(app);
+                        const querySnapshot = await getDocs(collection(db,"places"));
+
+                        var elementId = this.localization_id;
+
+                        querySnapshot.forEach((doc) => {
+                            if (doc.id==elementId){
+                                document.getElementById("inputName").value=doc.data()['name'];
+                                document.getElementById("inputDescription").value=doc.data()['description'];
+                                document.getElementById("inputLatitude").value=doc.data()['latitude'];
+                                document.getElementById("inputLongitude").value=doc.data()['longitude'];
+                                if (doc.data()['favourite']==true){
+                                    document.getElementById("inputFavouriteYes").checked=true;
+                                }
+                                else{
+                                    document.getElementById("inputFavouriteNo").checked=true;
+                                }
+                            }
+                        });
+                    },
+
+                    async submitForm(){
+                        const db = getFirestore(app);
+                        var addedName = document.getElementById("inputCurrentName").value;
+                        var addedDescription = document.getElementById("inputCurrentDescription").value;
+                        var addedLatitude = document.getElementById("inputCurrentLatitude").value;
+                        var addedLongitude = document.getElementById("inputCurrentLongitude").value;
+                        await addDoc(collection(db, "places"), {
+                            name: addedName,
+                            description: addedDescription,
+                            latitude: addedLatitude,
+                            longitude: addedLongitude,
+                            favourite: false,
+                        });
+                        this.renderMenu();
+                    },
+
+                    async submitChanges(event) {
+                        const db = getFirestore(app);
+                        var changedName = document.getElementById("inputName").value;
+                        var changedDescription = document.getElementById("inputDescription").value;
+                        var changedLatitude = document.getElementById("inputLatitude").value;
+                        var changedLongitude = document.getElementById("inputLongitude").value;
+                        if (document.getElementById("inputFavouriteYes").checked==true){
+                            var changedFavourite = true;
+                        }
+                        else {
+                            var changedFavourite = false;
+                        }
+                        
+                        const plRef = doc(db, "places", this.localization_id);
+                        await updateDoc(plRef, {
+                            name: changedName,
+                            description: changedDescription,
+                            latitude: changedLatitude,
+                            longitude: changedLongitude,
+                            favourite: changedFavourite
+                        });
+                        this.renderList();
+                    },
+
+                    async deleteElement(){
+                        const db = getFirestore(app);
+                        await deleteDoc(doc(db, "places", this.localization_id));
+                        this.renderList();
+                    },
+
+                    // JavaScript dla listy
+                    async listjs() {
+                                    
+                        const db = getFirestore(app);
+                        const querySnapshot = await getDocs(collection(db,"places"));
+                        var el = document.getElementById("list")
+
+                        querySnapshot.forEach((doc) => {
+                            var newDiv = document.createElement("div");
+                            var newTitle = document.createElement("h4");
+                            var newDescription = document.createElement("h6");
+                            newDiv.setAttribute('id', doc.id);
+                            newDiv.className="listSingleItem";
+                            newDiv.addEventListener('click', this.selectElementId);
+                            newTitle.innerHTML = doc.data()['name'];
+                            newDescription.innerHTML = doc.data()['description'];
+                            newTitle.className="listSingleItemName";
+                            newDescription.className="listSingleItemDescription";
+                            newDiv.appendChild(newTitle);
+                            newDiv.appendChild(newDescription);
+                            el.appendChild(newDiv);
+                        });
+                    },
+
+                    // JavaScript dla mapy
+                    async mapjs() {
+                        const db = getFirestore(app);
+                        const querySnapshot = await getDocs(collection(db,"places"));
+                        getLocation();
+                                    
+                        function getLocation() {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(showPosition);
+                            } else {
+                                x.innerHTML = "Geolocation is not supported by this browser.";
+                            }}
+
+                        function showPosition(position) {
+                            var pos_latitude = position.coords.latitude
+                            var pos_longitude = position.coords.longitude
+                            var mapOptions = {
+                            center: [pos_latitude, pos_longitude],
+                            attributionControl : false,
+                            zoom: 18}
+
+                            var map = new L.map('map', mapOptions);
+                            var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                            map.addLayer(layer);
+
+                            var attrOptions = {
+                            prefix: 'UlubioneMiejsca'
+                            };
+                            
+                            var attr = L.control.attribution(attrOptions);
+                            attr.addTo(map);  
+
+                            map.on("click", function(e){
+                                if (confirm("Czy chcesz dodać w tym miejscu nowy punkt?") == true ){
+                                var newPlaceName = prompt("Podaj nazwę nowego punktu:");
+                                    if (newPlaceName != null && newPlaceName !=""){
+                                        var newPlaceDescription = prompt("Podaj opis nowego miejsca:")
+                                        if (newPlaceDescription != null && newPlaceDescription !=""){
+                                        var newPlaceLatitude = e.latlng.lat;
+                                        var newPlaceLongitude = e.latlng.lng;
+                                        var markerOptions = {
+                                            title: newPlaceName,
+                                            clickable: true,
+                                            draggable: false
+                                        }
+                                        var marker = L.marker([newPlaceLatitude, newPlaceLongitude], markerOptions);
+                                        marker.bindPopup(newPlaceDescription);
+                                        marker.addTo(map);
+
+                                        addDoc(collection(db, "places"), {
+                                        name: newPlaceName,
+                                        latitude: newPlaceLatitude,
+                                        longitude: newPlaceLongitude,
+                                        favourite: false,
+                                        description: newPlaceDescription
+                                        });
+                                    }
+                                }
+                            }
+                            })
+
+                            addExistingPointsFromFirebase();
+
+                            function addExistingPointsFromFirebase(){
+                                querySnapshot.forEach((doc) => {
+                                if (doc.data()['favourite']==true){
+                                var iconOptions = {
+                                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+                                    iconSize: [25, 41],
+                                    iconAnchor: [12, 41],
+                                    popupAnchor: [1, -34],
+                                    shadowSize: [41, 41]
+                                }
+                                var customIcon = L.icon(iconOptions);
+                                var markerOptions = {
+                                    title: doc.data()['name'],
+                                    clickable: true,
+                                    draggable: false,
+                                    icon:customIcon
+                                }
+                                }
+                                else{
+                                var markerOptions = {
+                                    title: doc.data()['name'],
+                                    clickable: true,
+                                    draggable: false,
+                                } 
+                                }
+                                var marker = L.marker([doc.data()['latitude'], doc.data()['longitude']], markerOptions);
+                                marker.bindPopup(doc.data()['description'])
+                                marker.addTo(map);
+                                });
+                            }
+                            }
+                    },
+                    // JavaScript dla dodawania aktualnej lokalizacji
+                    async addjs(){
+                        getLocation()
+                        function getLocation() {
+                            if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(addCordsToForm);
+                            } else {
+                            x.innerHTML = "Geolocation is not supported by this browser.";
+                            }
+                        }
+                        function addCordsToForm(position){
+                            document.getElementById("inputCurrentLatitude").value=position.coords.latitude
+                            document.getElementById("inputCurrentLongitude").value=position.coords.longitude
+                        }
+                    },
+
+                    async makePhotoJS() {
+                        try{
+                        let video = document.getElementById('photo_video')
+                        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                        video.srcObject = stream}
+                        catch(error) {console.log(error)}
+                    },
+
+                    clickPhotoBtn() {
+                        let video = document.getElementById('photo_video')
+                        let canvas = document.getElementById('photo_canvas')
+                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                    },
+
+                    async sendPhoto() {
+                        var c = document.getElementById("photo_canvas");
+
+                        const fff = await new Promise(resolve => c.toBlob(resolve));
+
+                        const fileName = this.makePhotoName()
+                        const refer = this.stuser +'/'+ this.localization_id +'/'+ fileName
+
+                        const storage = getStorage();
+                        const storageRef = ref(storage, refer);
+
+                        const metadata = {
+                            contentType: 'image/jpeg',
+                        };
+
+                        uploadBytes(storageRef, fff,metadata).then((snapshot) => {
+                            console.log('Uploaded a blob or file!');
+                        });
+                    },
+
+                    makePhotoName() {
+                        var today = new Date();       
+                        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();        
+                        var ranstr = btoa(Math.random().toString()).substr(10, 10);
+                        var fileName = date + '-' + ranstr
+                        return fileName
+                    }
+                        
+                }
+            }).mount('#app')
+    </script>
+
+</body>
+</html>
+
+
