@@ -62,7 +62,7 @@
             <div class="col-12" id="menuTop">
                 <div class="col-6">
                     <h3 id="menuAppName">{{ menuElements.name }}</h3>
-                    <h4 class="menuTopElement">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+                    <h4 class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
                 </div>
             </div>
             <div class="col-12" id="menuBot">
@@ -232,6 +232,7 @@
                             const user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
+                            this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -250,7 +251,8 @@
                             const credential = FacebookAuthProvider.credentialFromResult(result);
                             const accessToken = credential.accessToken;
                             this.login_credentials.userCredential = credential;
-                            //this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -278,8 +280,8 @@
                             // The signed-in user info.
                             const user = result.user;
                             this.login_credentials.userCredential = credential;
-                            //this.login_credentials.userInfo = getAdditionalUserInfo(credential)
-                            //this.login_credentials.display_name = this.login_credentials.userInfo.username
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
@@ -301,7 +303,8 @@
                             // The signed-in user info.
                             const user = result.user;
                             //this.login_credentials.userCredential = credential;
-                            //this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
