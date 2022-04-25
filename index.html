@@ -187,6 +187,7 @@
         }
 
         Vue.createApp({
+                
                 data() {
                     return {
                         // narazie statyczne
@@ -212,20 +213,15 @@
                             show_full_galery: false,
                             show_small_galery: false,
                             show_photo: false,
+                        },
+                            login_credentials: {
+                            email: "",
+                            password: "",
+                            userCredential : "",
+                            userInfo: "",
+                            token: ""
                         }
                     }
-                },
-                setup() {
-                    const login_credentials = reactive({
-                        email: "",
-                        password: "",
-                        userCredential : "",
-                        userInfo: "",
-                        token: ""
-                    })
-                    return {
-                        login_credentials
-                    }      
                 },
                 methods: {
                     loginWithEmail() {
@@ -233,8 +229,8 @@
                         .then((userCredential) => {
                             // Signed in 
                             const user = userCredential.user;
-                            login_credentials.userCredential = userCredential;
-                            login_credentials.userInfo = getAdditionalUserInfo(userCredential)
+                            this.login_credentials.userCredential = userCredential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
                         })
                         .catch((error) => {
                             const errorCode = error.code;
@@ -251,8 +247,8 @@
                             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
                             const credential = FacebookAuthProvider.credentialFromResult(result);
                             const accessToken = credential.accessToken;
-                            login_credentials.userCredential = credential;
-                            login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
                         })
                         .catch((error) => {
                             // Handle Errors here.
@@ -278,9 +274,9 @@
 
                             // The signed-in user info.
                             const user = result.user;
-                            login_credentials.userCredential = credential;
-                            login_credentials.userInfo = getAdditionalUserInfo(credential)
-                            login_credentials.display_name = login_credentials.userInfo.username
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.display_name = this.login_credentials.userInfo.username
                         }).catch((error) => {
                             // Handle Errors here.
                             const errorCode = error.code;
@@ -300,8 +296,8 @@
                             const token = credential.accessToken;
                             // The signed-in user info.
                             const user = result.user;
-                            login_credentials.userCredential = credential;
-                            login_credentials.userInfo = getAdditionalUserInfo(credential)
+                            this.login_credentials.userCredential = credential;
+                            this.login_credentials.userInfo = getAdditionalUserInfo(credential)
                         }).catch((error) => {
                             // Handle Errors here.
                             const errorCode = error.code;
