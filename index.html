@@ -62,7 +62,7 @@
             <div class="col-12" id="menuTop">
                 <div class="col-6">
                     <h3 id="menuAppName">{{ menuElements.name }}</h3>
-                    <h4 class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+                    <textarea class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
                 </div>
             </div>
             <div class="col-12" id="menuBot">
@@ -214,7 +214,8 @@
                             show_small_galery: false,
                             show_photo: false,
                         },
-                            login_credentials: {
+                        login_credentials: {
+                            user: "",
                             email: "",
                             password: "",
                             userCredential : "",
@@ -229,7 +230,7 @@
                         signInWithEmailAndPassword(auth, document.getElementById("login_email").value, document.getElementById("login_password").value)
                         .then((userCredential) => {
                             // Signed in 
-                            const user = userCredential.user;
+                            this.login_credentials.user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
@@ -245,10 +246,10 @@
                         signInWithPopup(auth, providers.facebook)
                         .then((result) => {
                             // The signed-in user info.
-                            const user = result.user;
+                            const credential = FacebookAuthProvider.credentialFromResult(result);
+                            this.login_credentials.user = userCredential.user;
                             
                             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                            const credential = FacebookAuthProvider.credentialFromResult(result);
                             const accessToken = credential.accessToken;
                             this.login_credentials.userCredential = credential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(credential)
@@ -278,7 +279,7 @@
                             const secret = credential.secret;
 
                             // The signed-in user info.
-                            const user = result.user;
+                            this.login_credentials.user = credential.user;
                             this.login_credentials.userCredential = credential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(credential)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
@@ -302,7 +303,7 @@
                             const token = credential.accessToken;
                             // The signed-in user info.
                             const user = result.user;
-                            //this.login_credentials.userCredential = credential;
+                            this.login_credentials.user = credential.user;
                             this.login_credentials.userInfo = getAdditionalUserInfo(credential)
                             this.user_display_name = this.login_credentials.userInfo.displayName;
                             this.renderMenu()
