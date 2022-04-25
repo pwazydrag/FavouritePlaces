@@ -251,7 +251,7 @@
                         .then((result) => {
                             // The signed-in user info.
                             const credential = FacebookAuthProvider.credentialFromResult(result);
-                            this.login_credentials.user = userCredential.user;
+                            this.login_credentials.user = credential.user;
                             
                             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
                             const accessToken = credential.accessToken;
