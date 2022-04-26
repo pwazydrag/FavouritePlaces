@@ -62,7 +62,8 @@
             <div class="col-12" id="menuTop">
                 <div class="col-6">
                     <h3 id="menuAppName">{{ menuElements.name }}</h3>
-                    <textarea class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          <!-- tutaj wstawić login zalogowanego na przykład -->
+                    <!-- <textarea class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          tutaj wstawić login zalogowanego na przykład -->
+                    <h4 class="menuTopElement">{{ login_credentials.displayName }}</h4> <!-- To nie działa, ale jest tu aby nie było innego błędu -->
                 </div>
             </div>
             <div class="col-12" id="menuBot">
@@ -194,8 +195,7 @@
                 
                 data() {
                     return {
-                        // narazie statyczne
-                        localization: 'loc1',
+                        user_id: '',
                         localization_id: '',
 
                         menuElements: {
@@ -363,6 +363,7 @@
                     },
                     renderMenu() {
                         this.hideAll()
+                        this.user_id = this.login_credentials.user.uid
                         this.currentView.show_menu = true
                     },
                     renderFullGallery() {
@@ -618,7 +619,7 @@
                         const fff = await new Promise(resolve => c.toBlob(resolve));
 
                         const fileName = this.makePhotoName()
-                        const refer = this.login_credentials.userInfo.uid +'/'+ this.localization_id +'/'+ fileName
+                        const refer = this.user_id +'/'+ this.localization_id +'/'+ fileName
 
                         const storage = getStorage();
                         const storageRef = sref(storage, refer);
