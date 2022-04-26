@@ -141,25 +141,32 @@
 
         <!-- Widok galerii wspólnej -->
         <template v-if="currentView.show_full_galery">
-            <div class="col-12" id="gal">
-                <h4 style="color: white;">Pełna Galeria</h4>
-            </div>
+            <div class="container-fluid" id="gal"></div>
         </template>
 
         <!-- Widok galerii lokalizacji -->
         <template v-if="currentView.show_small_galery">
-            <div class="col-12" id="gal">
-                <h4 style="color: white;">Galeria Lokalizacji</h4>
-            </div>
+            <div class="container-fluid" id="gal"></div>
         </template>
 
         <!-- Widok robienia zdjęcia -->
         <template v-if="currentView.show_photo">
             <div class="col-12" id="make_photo_div">
-                <video id="photo_video" width="320" height="240" autoplay></video>
-                <button id="click-photo" @click="clickPhotoBtn()">Click Photo</button>
-                <canvas id="photo_canvas" width="320" height="240"></canvas>
-                <button id="send-photo" @click="sendPhoto()">Send Photo</button>
+                <template v-if="photo.step1">
+                    <video id="photo_video" width="320" height="240" autoplay></video>
+                </template>
+                <template v-if="photo.step2">
+                    <button class="btn btn-primary mt-3" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
+                </template>
+                <template v-if="photo.step3">
+                    <button class="btn btn-primary mt-3" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
+                </template>
+                <template v-if="photo.step4">
+                    <canvas id="photo_canvas" width="320" height="240" style="display: none;"></canvas>
+                </template>
+                <template v-if="photo.step5">
+                    <button class="btn btn-primary mt-3" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
+                </template>
             </div>
         </template>
     </div>
@@ -225,6 +232,13 @@
                             userInfo: "",
                             token: "",
                             display_name: ""
+                        },
+                        photo: {
+                            step1: true,
+                            step2: true,
+                            step3: false,
+                            step4: false,
+                            step5: false,
                         }
                     }
                 },
@@ -383,8 +397,7 @@
                     renderPhoto() {
                         this.hideAll()
                         this.currentView.show_navbar = true
-                        this.currentView.show_photo = true   
-                        this.makePhotoJS()       
+                        this.currentView.show_photo = true
                     },
 
 
@@ -396,10 +409,12 @@
 
                     async showDetails(targetId){
 
-                        var el = document.getElementById("list")
-                        while (el.firstChild) {
-                            el.removeChild(el.firstChild);
-                        }
+                        try {
+                            var el = document.getElementById("list")
+                            while (el.firstChild) {
+                                el.removeChild(el.firstChild);
+                            }
+                        } catch {}
 
                         const db = getFirestore(app);
                         const rpath = 'users/' + this.user_id +'/places'
@@ -611,24 +626,37 @@
                         }
                     },
 
+                    startPhotoBtn() {
+                        this.makePhotoJS()
+                    },
+
                     async makePhotoJS() {
-                        try{
                         let video = document.getElementById('photo_video')
+
+                        this.photo.step2 = false
+                        this.photo.step3 = true
+                        this.photo.step4 = true
+
                         let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                        video.srcObject = stream}
-                        catch(error) {console.log(error)}
+                        video.srcObject = stream
                     },
 
                     clickPhotoBtn() {
                         let video = document.getElementById('photo_video')
                         let canvas = document.getElementById('photo_canvas')
+                        canvas.style.display = 'block'
                         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                        this.photo.step1 = false
+                        this.photo.step2 = false
+                        this.photo.step3 = false
+                        this.photo.step5 = true
                     },
 
                     async sendPhoto() {
-                        var c = document.getElementById("photo_canvas");
+                        var canv = document.getElementById("photo_canvas")
+                        canv.style.display = 'none'
 
-                        const fff = await new Promise(resolve => c.toBlob(resolve));
+                        const fileData = await new Promise(resolve => canv.toBlob(resolve));
 
                         const fileName = this.makePhotoName()
                         const refer = this.user_id +'/'+ this.localization_id +'/'+ fileName
@@ -640,9 +668,15 @@
                             contentType: 'image/jpeg',
                         };
 
-                        uploadBytes(storageRef, fff,metadata).then((snapshot) => {
+                        uploadBytes(storageRef, fileData, metadata).then((snapshot) => {
                             console.log('Uploaded a blob or file!');
                         });
+                        this.photo.step1 = true
+                        this.photo.step2 = true
+                        this.photo.step3 = false
+                        this.photo.step4 = false
+                        this.photo.step5 = false
+                        this.renderDetail(this.localization_id)
                     },
 
                     makePhotoName() {
@@ -660,6 +694,7 @@
                                     getDownloadURL(itemRef)
                                         .then(function(url) {
                                             const img = document.createElement('img');
+                                            img.className = 'galeryImage'
                                             var el = document.getElementById('gal');
                                             img.setAttribute('src', url);
                                             el.appendChild(img);
