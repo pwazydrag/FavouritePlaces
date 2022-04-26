@@ -165,7 +165,7 @@
                     <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
                 </template>
                 <template v-if="photo.step4">
-                    <canvas id="photo_canvas" class="photoVideo" width="320" height="240" style="display: none;"></canvas>
+                    <canvas id="photo_canvas" class="photoVideo" style="display: none;width:90vw"></canvas>
                 </template>
                 <template v-if="photo.step5">
                     <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
