@@ -400,7 +400,8 @@
                         }
 
                         const db = getFirestore(app);
-                        const querySnapshot = await getDocs(collection(db,"places"));
+                        const rpath = 'users/' + this.user_id +'/places'
+                        const querySnapshot = await getDocs(collection(db,rpath));
 
                         var elementId = this.localization_id;
 
@@ -426,7 +427,10 @@
                         var addedDescription = document.getElementById("inputCurrentDescription").value;
                         var addedLatitude = document.getElementById("inputCurrentLatitude").value;
                         var addedLongitude = document.getElementById("inputCurrentLongitude").value;
-                        await addDoc(collection(db, "places"), {
+
+                        const rpath = 'users/' + this.user_id +'/places/'
+
+                        await addDoc(collection(db, rpath), {
                             name: addedName,
                             description: addedDescription,
                             latitude: addedLatitude,
@@ -448,8 +452,10 @@
                         else {
                             var changedFavourite = false;
                         }
+
+                        const rpath = 'users/' + this.user_id +'/places'
                         
-                        const plRef = doc(db, "places", this.localization_id);
+                        const plRef = doc(db, rpath, this.localization_id);
                         await updateDoc(plRef, {
                             name: changedName,
                             description: changedDescription,
@@ -470,7 +476,8 @@
                     async listjs() {
                                     
                         const db = getFirestore(app);
-                        const querySnapshot = await getDocs(collection(db,"places"));
+                        const rpath = 'users/' + this.user_id +'/places'
+                        const querySnapshot = await getDocs(collection(db,rpath));
                         var el = document.getElementById("list")
 
                         querySnapshot.forEach((doc) => {
@@ -493,9 +500,11 @@
                     // JavaScript dla mapy
                     async mapjs() {
                         const db = getFirestore(app);
-                        const querySnapshot = await getDocs(collection(db,"places"));
+                        const rpath = 'users/' + this.user_id +'/places'
+                        const querySnapshot = await getDocs(collection(db,rpath));
                         getLocation();
-                                    
+                        window.gpath = rpath
+                              
                         function getLocation() {
                             if (navigator.geolocation) {
                                 navigator.geolocation.getCurrentPosition(showPosition);
@@ -518,11 +527,10 @@
                             var attrOptions = {
                             prefix: 'UlubioneMiejsca'
                             };
-                            
+
                             var attr = L.control.attribution(attrOptions);
                             attr.addTo(map);  
-
-                            map.on("click", function(e){
+                            map.on("click", function(e){                                
                                 if (confirm("Czy chcesz dodać w tym miejscu nowy punkt?") == true ){
                                 var newPlaceName = prompt("Podaj nazwę nowego punktu:");
                                     if (newPlaceName != null && newPlaceName !=""){
@@ -539,7 +547,7 @@
                                         marker.bindPopup(newPlaceDescription);
                                         marker.addTo(map);
 
-                                        addDoc(collection(db, "places"), {
+                                        addDoc(collection(db, gpath), {
                                         name: newPlaceName,
                                         latitude: newPlaceLatitude,
                                         longitude: newPlaceLongitude,
