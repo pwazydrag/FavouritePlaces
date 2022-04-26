@@ -142,31 +142,33 @@
 
         <!-- Widok galerii wspólnej -->
         <template v-if="currentView.show_full_galery">
-            <div class="container-fluid" id="gal"></div>
+            <div class="container-fluid" id="gal" class="photosGallery"></div>
         </template>
 
         <!-- Widok galerii lokalizacji -->
         <template v-if="currentView.show_small_galery">
-            <div class="container-fluid" id="gal"></div>
+            <div class="container-fluid" id="gal" class="photosGallery"></div>
         </template>
 
         <!-- Widok robienia zdjęcia -->
         <template v-if="currentView.show_photo">
-            <div class="col-12" id="make_photo_div">
+            <div class="container-fluid" id="make_photo_div">
                 <template v-if="photo.step1">
-                    <video id="photo_video" width="320" height="240" autoplay></video>
+                    <div class="videosWrapper">
+                        <video id="photo_video" class="videoCSS" autoplay></video>
+                    </div>
                 </template>
                 <template v-if="photo.step2">
-                    <button class="btn btn-primary mt-3" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
+                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
                 </template>
                 <template v-if="photo.step3">
-                    <button class="btn btn-primary mt-3" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
+                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
                 </template>
                 <template v-if="photo.step4">
-                    <canvas id="photo_canvas" width="320" height="240" style="display: none;"></canvas>
+                    <canvas id="photo_canvas" class="photoVideo" width="320" height="240" style="display: none;"></canvas>
                 </template>
                 <template v-if="photo.step5">
-                    <button class="btn btn-primary mt-3" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
+                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
                 </template>
             </div>
         </template>

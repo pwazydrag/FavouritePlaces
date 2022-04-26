@@ -104,5 +104,27 @@ label {
 }
 
 .galeryImage{
-    padding: 10px;
+    border-style: groove;
+    margin-top: 1.4rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.photoVideo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.videoCSS{
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+}
+
+.videoWrapper{
+    max-width:100vw;
+    max-height:100vh;
 }
