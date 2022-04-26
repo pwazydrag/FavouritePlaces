@@ -62,8 +62,7 @@
             <div class="col-12" id="menuTop">
                 <div class="col-6">
                     <h3 id="menuAppName">{{ menuElements.name }}</h3>
-                    <!-- <textarea class="menuTopElement" v-model="user_display_name">{{ login_credentials.userInfo.displayName }}</h4>          tutaj wstawić login zalogowanego na przykład -->
-                    <h4 class="menuTopElement">{{ login_credentials.displayName }}</h4> <!-- To nie działa, ale jest tu aby nie było innego błędu -->
+                    <h4 class="menuTopElement" v-html="user_display_name"> </h4> <!-- To nie działa, ale jest tu aby nie było innego błędu -->
                 </div>
             </div>
             <div class="col-12" id="menuBot">
@@ -230,6 +229,9 @@
                     }
                 },
                 methods: {
+                    setDisplayName(displayName) {
+                        this.user_display_name = '<h4 class="menuTopElement" v-html="user_display_name">'+displayName+'</h4>'
+                    },
                     loginWithEmail() {
                         signInWithEmailAndPassword(auth, document.getElementById("login_email").value, document.getElementById("login_password").value)
                         .then((userCredential) => {
@@ -237,7 +239,7 @@
                             this.login_credentials.user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
-                            this.user_display_name = this.login_credentials.userInfo.displayName;
+                            this.setDisplayName(this.login_credentials.userInfo.displayName);
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -257,7 +259,7 @@
                             const accessToken = credential.accessToken;
                             this.login_credentials.userCredential = result;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.user_display_name = this.login_credentials.userInfo.displayName;
+                            this.setDisplayName(this.login_credentials.userInfo.displayName);
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -286,7 +288,7 @@
                             this.login_credentials.user = result.user;
                             this.login_credentials.userCredential = result;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.user_display_name = this.login_credentials.userInfo.displayName;
+                            this.setDisplayName(this.login_credentials.userInfo.displayName);
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
@@ -308,7 +310,7 @@
                             // The signed-in user info.
                             this.login_credentials.user = result.user;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.user_display_name = this.login_credentials.userInfo.displayName;
+                            this.setDisplayName(this.login_credentials.userInfo.displayName);
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
