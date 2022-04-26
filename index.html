@@ -9,7 +9,7 @@
     <script type="firebase.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
-    <title>Menu</title>
+    <title>Ulubione Lokalizacje</title>
     <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body> 
@@ -36,14 +36,14 @@
                             <input type="checkbox" class="form-check-input" id="login_remember_me">
                             <label class="form-check-label" for="login_remember_me">Remember me</label>
                         </div>
-                        <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100">Submit</button>
+                        <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100 mb-3">Submit</button>
                     </div>
                 </form>
-                <hr class="solid">
+                <hr class="solid" >
                 <div class="d-grid gap-3">
-                <button @click="loginWithFacebook()" type="button" class="btn btn-primary w-100 mt-10">Login with Facebook</button>
-                <button @click="loginWithTwitter()" type="button" class="btn btn-primary w-100 mt-10">Login with Twitter</button>
-                <button @click="loginWithGoogle()" type="button" class="btn btn-primary w-100 mt-10">Login with Google</button>
+                <button @click="loginWithFacebook()" type="button" class="btn btn-primary w-100 mt-4">Login with Facebook</button>
+                <button @click="loginWithTwitter()" type="button" class="btn btn-primary w-100 mt-4">Login with Twitter</button>
+                <button @click="loginWithGoogle()" type="button" class="btn btn-primary w-100 mt-4">Login with Google</button>
                     </div>
             </div>
         </template>
@@ -71,7 +71,8 @@
                 <h4 @click="renderMap()" class="menuElement">{{ menuElements.map }}</h4>
                 <h4 @click="renderAddForm()" class="menuElement">{{ menuElements.add }}</h4>
                 <h4 @click="renderFullGallery()" class="menuElement">Galeria</h4>
-                <h4 @click="renderLogin()" class="menuElement">{{ menuElements.logout }}</h4>
+                <hr class="solid">
+                <h4 @click="renderLogin()" class="menuElement mt-3">{{ menuElements.logout }}</h4>
             </div>
         </template>
 
@@ -117,7 +118,7 @@
 
         <!-- Widok mapy z menu -->
         <template v-if="currentView.show_map">
-            <div id = "map" style = "width: 100%; height: 90vh"></div>
+            <div id = "map" style = "width: 100%; height: 86vh"></div>
         </template>
 
         <!-- Widok dodawania nowej lokalizacji -->
@@ -542,7 +543,7 @@
                             map.addLayer(layer);
 
                             var attrOptions = {
-                            prefix: 'UlubioneMiejsca'
+                            prefix: 'UlubioneLokalizacje'
                             };
 
                             var attr = L.control.attribution(attrOptions);

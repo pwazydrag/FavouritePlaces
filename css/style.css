@@ -29,9 +29,9 @@ label {
 
 .menuTopElement{
     color: azure;
+    margin-left: 2rem;
     margin-bottom: 0;
-    margin-left: 4rem;
-    padding-bottom: 4rem;
+    padding-bottom: 3rem;
 }
 
 .menuElement{
@@ -42,9 +42,11 @@ label {
 
 .menuElement:last-child{
     color: beige;
+    margin-top: 3rem;
     margin-bottom: 4rem;
     margin-left: 4rem;
     padding-bottom: 3.3rem;
+
 }
 
 #menuTop{
