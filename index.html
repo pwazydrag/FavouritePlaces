@@ -239,7 +239,7 @@
                             this.login_credentials.user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
-                            this.setDisplayName(this.login_credentials.userInfo.displayName);
+                            this.setDisplayName(userCredential.user.displayName);
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -259,7 +259,7 @@
                             const accessToken = credential.accessToken;
                             this.login_credentials.userCredential = result;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.setDisplayName(this.login_credentials.userInfo.displayName);
+                            this.setDisplayName(result.user.displayName);
                             this.renderMenu()
                         })
                         .catch((error) => {
@@ -288,7 +288,7 @@
                             this.login_credentials.user = result.user;
                             this.login_credentials.userCredential = result;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.setDisplayName(this.login_credentials.userInfo.displayName);
+                            this.setDisplayName(result.user.displayName);
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
@@ -310,7 +310,7 @@
                             // The signed-in user info.
                             this.login_credentials.user = result.user;
                             this.login_credentials.userInfo = getAdditionalUserInfo(result)
-                            this.setDisplayName(this.login_credentials.userInfo.displayName);
+                            this.setDisplayName(result.user.displayName);
                             this.renderMenu()
                         }).catch((error) => {
                             // Handle Errors here.
