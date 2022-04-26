@@ -142,14 +142,14 @@
 
         <!-- Widok galerii wspólnej -->
         <template v-if="currentView.show_full_galery">
-            <div class="col-12" id="menuTop">
+            <div class="col-12" id="gal">
                 <h4 style="color: white;">Pełna Galeria</h4>
             </div>
         </template>
 
         <!-- Widok galerii lokalizacji -->
         <template v-if="currentView.show_small_galery">
-            <div class="col-12" id="menuTop">
+            <div class="col-12" id="gal">
                 <h4 style="color: white;">Galeria Lokalizacji</h4>
             </div>
         </template>
@@ -370,11 +370,13 @@
                         this.hideAll()
                         this.currentView.show_navbar = true
                         this.currentView.show_full_galery = true
+                        this.full_galeryjs()
                     },
                     renderSmallGallery() {
                         this.hideAll()
                         this.currentView.show_navbar = true
                         this.currentView.show_small_galery = true
+                        this.det_galeryjs()
                     },
                     renderPhoto() {
                         this.hideAll()
@@ -654,8 +656,30 @@
                                         });
                                 });
                             })
-                    }
-                        
+                    },
+
+                    full_galeryjs() {
+                        const storage = getStorage();
+                        const listRef = sref(storage, this.user_id);
+
+                        listAll(listRef)
+                            .then((res) => {
+                                res.prefixes.forEach((folderRef) => {
+                                    this.show_img_from_folder(folderRef)
+                                });
+                            });
+                    },
+
+                    det_galeryjs() {
+                    const storage = getStorage();
+                    var path = this.user_id + '/' + this.localization_id
+                    const listRef = sref(storage, path);
+
+                    this.show_img_from_folder(listRef)
+                    },
+
+
+
                 }
             }).mount('#app')
     </script>
