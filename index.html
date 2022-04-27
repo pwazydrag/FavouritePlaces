@@ -270,7 +270,7 @@
                             this.login_credentials.user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
-                            this.setDisplayName(document.getElementById("login_email").value);
+                            this.setDisplayName(this.email);
                             this.renderMenu()
                         })
                         .catch((error) => {
