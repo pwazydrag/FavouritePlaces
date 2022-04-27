@@ -149,16 +149,14 @@
 
         <!-- Widok galerii wspólnej -->
         <template v-if="currentView.show_full_galery">
-            <div class="container-fluid" id="gal" class="photosGallery">
-                <button  class="btn btn-primary" style="position:sticky;top:93%;width:100%;padding:10px;" @click="renderMenu()">Wróć do menu</button>
-            </div>
+            <div class="container-fluid" id="gal" class="photosGallery"></div>
+            <button  class="btn btn-primary" style="position:relative;bottom:0;width:100%;padding:10px;" @click="renderMenu()">Wróć do menu</button>
         </template>
 
         <!-- Widok galerii lokalizacji -->
         <template v-if="currentView.show_small_galery">
-            <div class="container-fluid" id="gal" class="photosGallery">
-                <button  class="btn btn-primary" style="position:sticky;top:93%;width:100%;padding:10px;" @click="renderDetail(this.localization_id)">Wróć do szczegółów lokalizacji</button>
-            </div>
+            <div class="container-fluid" id="gal" class="photosGallery"></div>
+            <button  class="btn btn-primary" style="position:relative;bottom:0;width:100%;padding:10px;" @click="renderDetail(this.localization_id)">Wróć do szczegółów lokalizacji</button>
         </template>
 
         <!-- Widok robienia zdjęcia -->
