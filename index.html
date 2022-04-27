@@ -247,15 +247,15 @@
                 },
                 methods: {
                     validateEmail() {
-                        if (this.email.length < 3) {
+                        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
                             this.msg['email'] = 'Please enter a valid email address';
                         } else {
                             this.msg['email'] = '';
                         }
                     },
-                    verifyPassword() {
-                        if(this.password === '')  {
-                            this.msg['password'] = 'Please enter a valid password';
+                    validatePassword() {
+                        if(this.password.length < 3)  {
+                            this.msg['password'] = 'Password is too short';
                         } else {
                             this.msg['password'] = '';
                         }
