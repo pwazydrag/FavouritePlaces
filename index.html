@@ -149,12 +149,16 @@
 
         <!-- Widok galerii wspólnej -->
         <template v-if="currentView.show_full_galery">
-            <div class="container-fluid" id="gal" class="photosGallery"></div>
+            <div class="container-fluid" id="gal" class="photosGallery">
+                <button  class="btn btn-primary" style="position:sticky;top:93%;width:100%;padding:10px;" @click="renderMenu()">Wróć do menu</button>
+            </div>
         </template>
 
         <!-- Widok galerii lokalizacji -->
         <template v-if="currentView.show_small_galery">
-            <div class="container-fluid" id="gal" class="photosGallery"></div>
+            <div class="container-fluid" id="gal" class="photosGallery">
+                <button  class="btn btn-primary" style="position:sticky;top:93%;width:100%;padding:10px;" @click="renderDetail(this.localization_id)">Wróć do szczegółów lokalizacji</button>
+            </div>
         </template>
 
         <!-- Widok robienia zdjęcia -->
@@ -215,7 +219,7 @@
                         localization_id: '',
                         email: '',
                         password: '',
-                        msg: [],
+                        msg: {email:'Email', password:'Hasło'},
                         login_error: '',
                         form_error: '',
                         changes_error: '',
@@ -591,7 +595,8 @@
 
                     async deleteElement(){
                         const db = getFirestore(app);
-                        await deleteDoc(doc(db, "places", this.localization_id));
+                        const rpath = 'users/' + this.user_id +'/places'
+                        await deleteDoc(doc(db, rpath, this.localization_id));
                         this.renderList();
                     },
 
