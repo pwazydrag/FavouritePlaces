@@ -171,15 +171,15 @@
                 </template>
                 <template v-if="photo.step2">
                     <div class="button-box col-lg-6"></div>
-                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
-                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:4%;width:160px;" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:4%;width:160px;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
                     </div>
 
                 </template>
                 <template v-if="photo.step3">
                     <div class="button-box col-lg-6">
-                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
-                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:4%;width:160px;" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:4%;width:160px;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
                     </div>
                 </template>
                 <template v-if="photo.step4">
@@ -187,8 +187,8 @@
                 </template>
                 <template v-if="photo.step5">
                     <div class="button-box col-lg-6"></div>
-                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
-                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:4%;width:160px;" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:4%;width:160px;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
                     </div>
                 </template>
             </div>
