@@ -170,16 +170,26 @@
                     </div>
                 </template>
                 <template v-if="photo.step2">
-                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
+                    <div class="button-box col-lg-6"></div>
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="start-photo" @click="startPhotoBtn()">Uruchom kamerę</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                    </div>
+
                 </template>
                 <template v-if="photo.step3">
-                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
+                    <div class="button-box col-lg-6">
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="clickPhotoBtn()">Zrób zdjęcie</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                    </div>
                 </template>
                 <template v-if="photo.step4">
                     <canvas id="photo_canvas" class="photoVideo" style="display: none;width:90vw"></canvas>
                 </template>
                 <template v-if="photo.step5">
-                    <button class="btn btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 p-3" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
+                    <div class="button-box col-lg-6"></div>
+                        <button class="btn btn-primary position-absolute bottom-0 start-0 mb-3 p-3" style="margin-left:10%;" id="send-photo" @click="sendPhoto()">Wyślij zdjęcie</button>
+                        <button class="btn btn-primary position-absolute bottom-0 start-50 mb-3 p-3" style="margin-left:10%;" id="click-photo" @click="renderDetail(this.localization_id)">Wróć</button>
+                    </div>
                 </template>
             </div>
         </template>
@@ -443,11 +453,6 @@
                         this.hideAll()
                         this.user_id = this.login_credentials.user.uid
                         this.currentView.show_menu = true
-                        this.photo.step1 = true
-                        this.photo.step2 = true
-                        this.photo.step3 = false
-                        this.photo.step4 = false
-                        this.photo.step5 = false
                     },
                     renderFullGallery() {
                         this.hideAll()
@@ -465,6 +470,11 @@
                         this.hideAll()
                         this.currentView.show_navbar = true
                         this.currentView.show_photo = true
+                        this.photo.step1 = true
+                        this.photo.step2 = true
+                        this.photo.step3 = false
+                        this.photo.step4 = false
+                        this.photo.step5 = false
                     },
 
 

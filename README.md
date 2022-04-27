@@ -1,7 +1,7 @@
-[Prototyp - link](https://marvelapp.com/prototype/924ccc3/screen/86313635)
+# Autorzy:
+### Paweł Ważydrąg
+### Przemysław Polak
+### Piotr Woźniak
 
-# Trzeba zrobić jeszcze:
-- manifest
-- wibracje i walidacje do formularzy 
-- połączyć usługi firebase
-- można rozwiązać problem ciągłego pytania o lokalizację
+## O aplikacji:
+### Aplikacja mobilna do wyświetlania i zapisywania ulubionych lokalizacji.

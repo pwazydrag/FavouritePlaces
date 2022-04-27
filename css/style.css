@@ -116,6 +116,15 @@ label.dark {
     
 }
 
+.galeryImage:last-child{
+    border-style: groove;
+    margin-top: 1.4rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 2.8rem;
+}
+
 .photoVideo{
     display: block;
     margin-left: auto;
