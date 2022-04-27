@@ -34,14 +34,14 @@
                             <input id="floatingPasswordInput" for="password" type="password" class="form-control" placeholder="Password" required v-model="password" @blur="validatePassword">
                             <label for="floatingPasswordInput" v-if="msg.password" class="dark">{{msg.password}}</label>
                         </div>
-                        <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100 mb-3">Submit</button>
+                        <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100 mb-3">Zaloguj się</button>
                     </div>
                 </form>
                 <hr class="solid" >
                 <div class="d-grid gap-3">
-                <button @click="loginWithFacebook()" type="button" class="btn btn-primary w-100 mt-4">Login with Facebook</button>
-                <button @click="loginWithTwitter()" type="button" class="btn btn-primary w-100 mt-4">Login with Twitter</button>
-                <button @click="loginWithGoogle()" type="button" class="btn btn-primary w-100 mt-4">Login with Google</button>
+                <button @click="loginWithFacebook()" type="button" class="btn btn-primary w-100 mt-4">Zaloguj się przy pomocy Facebook'a</button>
+                <button @click="loginWithTwitter()" type="button" class="btn btn-primary w-100 mt-4">Zaloguj się przy pomocy Twitter'a</button>
+                <button @click="loginWithGoogle()" type="button" class="btn btn-primary w-100 mt-4">Zaloguj się przy pomocy Google'a</button>
                     </div>
             </div>
         </template>
@@ -248,16 +248,16 @@
                 methods: {
                     validateEmail() {
                         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
-                            this.msg['email'] = 'Please enter a valid email address';
-                        } else {
                             this.msg['email'] = 'Email';
+                        } else {
+                            this.msg['email'] = 'Podaj prawidłowy adres email!';
                         }
                     },
                     validatePassword() {
                         if(this.password.length < 3)  {
-                            this.msg['password'] = 'Password is too short';
+                            this.msg['password'] = 'Hasło jest za krótkie!';
                         } else {
-                            this.msg['password'] = 'Password';
+                            this.msg['password'] = 'Hasło';
                         }
                     },
                     setDisplayName(displayName) {
