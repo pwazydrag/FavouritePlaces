@@ -111,8 +111,10 @@
                     </div>
                     <div class="row">
                         <button type="button" value="Submit" id="btn" class="btn btn-primary mt-3" @click="submitChanges()" style="text-align: center;">Zapisz zmiany</button>
+                        <div class="alert alert-danger" role="alert" v-if="changes_error">
+                            {{ changes_error }}
+                        </div>
                     </div>
-                    
                 </form>
             </div>
         </template>
@@ -135,8 +137,12 @@
                 <input type="text" class="form-control" id="inputCurrentLongitude" value="" required>
             </form>
                 <button type="button" value="Submit" class="btn btn-primary mt-3" @click="submitForm()">Wyślij</button>
+                <div class="alert alert-danger" role="alert" v-if="form_error">
+                    {{ form_error }}
+                </div>
             </div>
-            <form> 
+            <form>
+            
 
     
         </template>
@@ -211,6 +217,8 @@
                         password: '',
                         msg: [],
                         login_error: '',
+                        form_error: '',
+                        changes_error: '',
                         menuElements: {
                             name: "UlubioneLokalizacje",
                             menu: "Menu",
@@ -494,6 +502,26 @@
                     },
 
                     async submitForm(){
+                        if (document.getElementById("inputCurrentName").value == ""){
+                            this.form_error = 'Wprowadź nazwę!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputCurrentDescription").value == ""){
+                            this.form_error = 'Wprowadź opis!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputCurrentLatitude").value == ""){
+                            this.form_error = 'Wprowadź szerokość!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputCurrentLongitude").value == ""){
+                            this.form_error = 'Wprowadź wysokość!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
                         const db = getFirestore(app);
                         var addedName = document.getElementById("inputCurrentName").value;
                         var addedDescription = document.getElementById("inputCurrentDescription").value;
@@ -509,10 +537,32 @@
                             longitude: addedLongitude,
                             favourite: false,
                         });
+                        this.form_error = '';
                         this.renderMenu();
                     },
 
                     async submitChanges(event) {
+                        //verify the following: inputName, inputDescription, inputLatitude, inputLongitude
+                        if (document.getElementById("inputName").value == ""){
+                            this.changes_error = 'Wprowadź nazwę!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputDescription").value == ""){
+                            this.changes_error = 'Wprowadź opis!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputLatitude").value == ""){
+                            this.changes_error = 'Wprowadź szerokość!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
+                        if (document.getElementById("inputLongitude").value == ""){
+                            this.changes_error = 'Wprowadź wysokość!';
+                            window.navigator.vibrate(200);
+                            return;
+                        }
                         const db = getFirestore(app);
                         var changedName = document.getElementById("inputName").value;
                         var changedDescription = document.getElementById("inputDescription").value;
@@ -535,6 +585,7 @@
                             longitude: changedLongitude,
                             favourite: changedFavourite
                         });
+                        this.changes_error = '';
                         this.renderList();
                     },
 
