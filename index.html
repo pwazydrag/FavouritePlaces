@@ -35,6 +35,9 @@
                             <label for="floatingPasswordInput" v-if="msg.password" class="dark">{{msg.password}}</label>
                         </div>
                         <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100 mb-3">Zaloguj się</button>
+                        <div class="alert alert-danger" role="alert" v-if="login_error">
+                            {{ login_error }}
+                        </div>
                     </div>
                 </form>
                 <hr class="solid" >
@@ -207,6 +210,7 @@
                         email: '',
                         password: '',
                         msg: [],
+                        login_error: '',
                         menuElements: {
                             name: "UlubioneLokalizacje",
                             menu: "Menu",
@@ -249,32 +253,55 @@
                     validateEmail() {
                         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
                             this.msg['email'] = 'Email';
+                            return true;
                         } else {
                             this.msg['email'] = 'Podaj prawidłowy adres email!';
+                            return false;
                         }
                     },
                     validatePassword() {
                         if(this.password.length < 3)  {
                             this.msg['password'] = 'Hasło jest za krótkie!';
+                            return false;
                         } else {
                             this.msg['password'] = 'Hasło';
+                            return true;
                         }
                     },
                     setDisplayName(displayName) {
                         this.user_display_name = '<h4 class="menuTopElement" v-html="user_display_name">'+displayName+'</h4>'
                     },
                     loginWithEmail() {
+                        if (!validateEmail()) {
+                            this.login_error = 'Nieprawidłowa forma email!'
+                        }
+                        if (!validatePassword()) {
+                            this.login_error = 'Hasło jest za krótkie!'
+                        }
                         signInWithEmailAndPassword(auth, this.email, this.password)
                         .then((userCredential) => {
                             // Signed in 
                             this.login_credentials.user = userCredential.user;
                             this.login_credentials.userCredential = userCredential;
                             this.login_credentials.userInfo = getAdditionalUserInfo(userCredential)
+                            this.login_error = '';
                             this.setDisplayName(this.email);
                             this.renderMenu()
                         })
                         .catch((error) => {
                             const errorCode = error.code;
+                            if (error.code='auth/user-not-found') {
+                                this.login_error = 'Nie znaleziono użytkownika z takim adresem email!';
+                            }
+                            if (error.code='auth/wrong-password') {
+                                this.login_error = 'Błędne hasło!';
+                            }
+                            if (error.code='auth/invalid-email') {
+                                this.login_error = 'Nieprawidłowa forma email!';
+                            }
+                            if (error.code='auth/internal-error') {
+                                this.login_error = 'Błąd wewnętrzny!';
+                            }
                             const errorMessage = error.message;
                             console.error(errorCode, errorMessage)
                         });
