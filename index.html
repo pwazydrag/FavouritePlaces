@@ -272,10 +272,10 @@
                         this.user_display_name = '<h4 class="menuTopElement" v-html="user_display_name">'+displayName+'</h4>'
                     },
                     loginWithEmail() {
-                        if (!validateEmail()) {
+                        if (!this.validateEmail()) {
                             this.login_error = 'Nieprawidłowa forma email!'
                         }
-                        if (!validatePassword()) {
+                        if (!this.validatePassword()) {
                             this.login_error = 'Hasło jest za krótkie!'
                         }
                         signInWithEmailAndPassword(auth, this.email, this.password)
