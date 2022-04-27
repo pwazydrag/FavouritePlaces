@@ -26,13 +26,13 @@
                 <form>
                     <div class="d-grid gap-1">
                         <div class="form-floating">
-                            <input for="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" required v-model="email" @blur="validateEmail">
-                            <span class="floating-placeholder" v-if="msg.email">{{msg.email}}</span>
+                            <input id="floatingEmailInput" for="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" required v-model="email" @blur="validateEmail">
+                            <label for="floatingEmailInput" v-if="msg.email">{{msg.email}}</label>
                         </div>
                         <div class="form-floating">
                             <!-- <label for="password">Password</label> -->
-                            <input for="password" type="password" class="form-control" placeholder="Password" required v-model="password" @blur="validatePassword">
-                            <span class="floating-placeholder" v-if="msg.password">{{msg.password}}</span>
+                            <input id="floatingPasswordInput" for="password" type="password" class="form-control" placeholder="Password" required v-model="password" @blur="validatePassword">
+                            <label for="floatingPasswordInput" v-if="msg.password">{{msg.password}}</label>
                         </div>
                         <button @click="loginWithEmail()" type="button" class="btn btn-primary w-100 mb-3">Submit</button>
                     </div>
