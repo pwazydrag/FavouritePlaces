@@ -274,9 +274,11 @@
                     loginWithEmail() {
                         if (!this.validateEmail()) {
                             this.login_error = 'Nieprawidłowa forma email!'
+                            window.navigator.vibrate(200);
                         }
                         if (!this.validatePassword()) {
                             this.login_error = 'Hasło jest za krótkie!'
+                            window.navigator.vibrate(200);
                         }
                         signInWithEmailAndPassword(auth, this.email, this.password)
                         .then((userCredential) => {
@@ -292,15 +294,19 @@
                             const errorCode = error.code;
                             if (error.code=='auth/user-not-found') {
                                 this.login_error = 'Nie znaleziono użytkownika z takim adresem email!';
+                                window.navigator.vibrate(200);
                             }
                             if (error.code=='auth/wrong-password') {
                                 this.login_error = 'Błędne hasło!';
+                                window.navigator.vibrate(200);
                             }
                             if (error.code=='auth/invalid-email') {
                                 this.login_error = 'Nieprawidłowa forma email!';
+                                window.navigator.vibrate(200);
                             }
                             if (error.code=='auth/internal-error') {
                                 this.login_error = 'Błąd wewnętrzny!';
+                                window.navigator.vibrate(200);
                             }
                             const errorMessage = error.message;
                             console.error(errorCode, errorMessage)
