@@ -290,16 +290,16 @@
                         })
                         .catch((error) => {
                             const errorCode = error.code;
-                            if (error.code='auth/user-not-found') {
+                            if (error.code=='auth/user-not-found') {
                                 this.login_error = 'Nie znaleziono użytkownika z takim adresem email!';
                             }
-                            if (error.code='auth/wrong-password') {
+                            if (error.code=='auth/wrong-password') {
                                 this.login_error = 'Błędne hasło!';
                             }
-                            if (error.code='auth/invalid-email') {
+                            if (error.code=='auth/invalid-email') {
                                 this.login_error = 'Nieprawidłowa forma email!';
                             }
-                            if (error.code='auth/internal-error') {
+                            if (error.code=='auth/internal-error') {
                                 this.login_error = 'Błąd wewnętrzny!';
                             }
                             const errorMessage = error.message;
