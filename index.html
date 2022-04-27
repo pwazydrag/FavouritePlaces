@@ -247,14 +247,14 @@
                 },
                 methods: {
                     validateEmail() {
-                        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+                        if (this.email.length < 3) {
                             this.msg['email'] = 'Please enter a valid email address';
                         } else {
                             this.msg['email'] = '';
                         }
                     },
                     verifyPassword() {
-                        if(this.password.length == 0)  {
+                        if(this.password === '')  {
                             this.msg['password'] = 'Please enter a valid password';
                         } else {
                             this.msg['password'] = '';
