@@ -1,0 +1,21 @@
+{
+    "short_name": "Ulubione Lokalizacje",
+    "icons": [
+      {
+        "src": "i192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "i512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "index.html",
+    "background_color": "#1E2D3E",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#1E2D3E",
+    "description": "Wyświetla ulubione lokalizacje użytkownika."
+}
